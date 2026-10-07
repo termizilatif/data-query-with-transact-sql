@@ -1,0 +1,22 @@
+question,topic,scenario,correct_answer,explanation
+1,Column aliases,Return Name as ProductName,"a, c","AS is optional, so 'Name AS ProductName' and 'Name ProductName' both alias the column."
+2,Calculated columns,Return OrderNumber and Subtotal + Tax as Total,c,The expression needs an alias; Total is not a stored column.
+3,Data type conversion,Multiply Quantity by Price stored as varchar,"b, d",CAST/CONVERT Price to money before multiplying; implicit conversion of varchar fails.
+4,NULL handling,NULLIF with string concatenation,a,"NULLIF('', '') returns NULL and any concatenation with NULL yields NULL, so all rows are NULL."
+5,DISTINCT,Unique City/CountryRegion pairs,b,DISTINCT removes duplicate combinations.
+6,ORDER BY,"Category ascending, price descending",c,"ORDER BY ProductCategoryID ASC, ListPrice DESC."
+7,Date filtering,First calendar quarter of 2015,"a, c","BETWEEN and >= / <= include both boundary dates; the other options exclude boundaries, overshoot, or match only two dates."
+8,Outer joins,Include products never ordered,c,"Product is on the right side of the join, so RIGHT JOIN keeps all products."
+9,Set operators,Customers with no orders,EXCEPT,EXCEPT returns rows from the first query that are not in the second.
+10,Outer joins,All promotions and all products,b,FULL OUTER JOIN keeps unmatched rows from both tables.
+11,GROUP BY,Last sold date per product,c,Aggregate MAX(OrderDate) requires GROUP BY p.ProductName.
+12,Conditional logic,IIF / ISNUMERIC / TRY_CAST with 'X21',d,"'X21' is not numeric, so the outer IIF returns 'Custom'."
+13,HAVING,Lowest sale above overall average,HAVING MIN(Amount) > (SELECT AVG(Amount) FROM Sales.vSalesOrders),Group-level filters belong in HAVING; the subquery supplies the overall average.
+14,Correlated subquery,Last order date per customer,Option 1,The subquery must correlate on o.CustomerID = c.CustomerID and use MAX(o.OrderDate).
+15,Batches and temp tables,Table variable out of scope after GO,Remove the GO command; Use a temporary table named #tab,A table variable lives only within its batch; GO ends the batch.
+16,Common table expressions,Use the CTE to total revenue per customer,Option 2,Join the CTE to orders and group by the CTE's CustomerName.
+17,GROUPING SETS,"(CountryRegion), (CountryRegion, City), ()","a, c, e","Returns a grand total, a total per CountryRegion and a total per CountryRegion/City combination."
+18,UNPIVOT,Turn region columns into rows,Option 2,UNPIVOT rotates columns into rows; PIVOT does the reverse.
+19,INSERT,Insert a customer with a default Active value,"Option 1, Option 3",Identity values are generated automatically; omit them or list all non-identity columns with NULL/DEFAULT.
+20,UPDATE,Raise price 10% for non-discontinued products,Option 4,"Set ListPrice and LastUpdated, filter with WHERE Discontinued = 0."
+21,Error handling,Roll back and re-throw in CATCH,Option 3,"Check @@TRANCOUNT, roll back, then THROW; to re-throw the original error."
