@@ -1,31 +1,31 @@
 exercise,title,topic,task,solution_sql,file
 1,Retrieving Customer Data,SELECT basics,Retrieve all columns for all customers.,"SELECT *
-FROM SalesLT.Customer;",exercises/sql/01_retrieving_customer_data.sql
+FROM SalesLT.Customer;",exercises/01_retrieving_customer_data.sql
 2,Retrieving Transportation Report Data,DISTINCT,"List every customer location (City, StateProvince) without duplicates.","SELECT DISTINCT City, StateProvince
-FROM SalesLT.Address;",exercises/sql/02_transportation_report_data.sql
+FROM SalesLT.Address;",exercises/02_transportation_report_data.sql
 3,Generating Invoice Reports,JOIN,"Return company name, sales order ID and total due for each order.","SELECT c.CompanyName, oh.SalesOrderID, oh.TotalDue
 FROM SalesLT.Customer AS c
 JOIN SalesLT.SalesOrderHeader AS oh
-    ON oh.CustomerID = c.CustomerID;",exercises/sql/03_invoice_reports.sql
+    ON oh.CustomerID = c.CustomerID;",exercises/03_invoice_reports.sql
 4,Retrieving Customer Addresses,"Multi-table JOIN, literal column","Return company, street address, city and an AddressType of 'Billing' for Main Office addresses.","SELECT c.CompanyName, a.AddressLine1, a.City, 'Billing' AS AddressType
 FROM SalesLT.Customer AS c
 JOIN SalesLT.CustomerAddress AS ca
     ON c.CustomerID = ca.CustomerID
 JOIN SalesLT.Address AS a
     ON ca.AddressID = a.AddressID
-WHERE ca.AddressType = 'Main Office';",exercises/sql/04_customer_addresses.sql
+WHERE ca.AddressType = 'Main Office';",exercises/04_customer_addresses.sql
 5,Retrieving Product Information,Scalar functions,"Return product ID, upper-case name and weight rounded to the nearest whole unit.","SELECT ProductID, UPPER(Name) AS ProductName, ROUND(Weight, 0) AS ApproxWeight
-FROM SalesLT.Product;",exercises/sql/05_product_information.sql
+FROM SalesLT.Product;",exercises/05_product_information.sql
 6,Retrieving Product Price Information,Subqueries,Return products whose list price exceeds the average unit price of all products sold.,"SELECT ProductID, Name, ListPrice
 FROM SalesLT.Product
 WHERE ListPrice >
     (SELECT AVG(UnitPrice) FROM SalesLT.SalesOrderDetail)
-ORDER BY ProductID;",exercises/sql/06_product_price_information.sql
+ORDER BY ProductID;",exercises/06_product_price_information.sql
 7,Retrieving Product Model Information,JOIN with view,"Return product ID, name, model name and model summary.","SELECT p.ProductID, p.Name AS ProductName, pm.Name AS ProductModelName, pm.Summary
 FROM SalesLT.Product AS p
 JOIN SalesLT.vProductModelCatalogDescription AS pm
     ON p.ProductModelID = pm.ProductModelID
-ORDER BY ProductID;",exercises/sql/07_product_model_information.sql
+ORDER BY ProductID;",exercises/07_product_model_information.sql
 8,Retrieving Regional Sales Totals,GROUP BY ROLLUP,Add a grand total and country/region subtotals to revenue by state/province.,"SELECT a.CountryRegion, a.StateProvince, SUM(soh.TotalDue) AS Revenue
 FROM SalesLT.Address AS a
 JOIN SalesLT.CustomerAddress AS ca
@@ -35,7 +35,7 @@ JOIN SalesLT.Customer AS c
 JOIN SalesLT.SalesOrderHeader AS soh
     ON c.CustomerID = soh.CustomerID
 GROUP BY ROLLUP(a.CountryRegion, a.StateProvince)
-ORDER BY a.CountryRegion, a.StateProvince;",exercises/sql/08_regional_sales_totals.sql
+ORDER BY a.CountryRegion, a.StateProvince;",exercises/08_regional_sales_totals.sql
 9,Inserting Products,"INSERT, SCOPE_IDENTITY","Insert the new product 'LED Lights', return its identity value and view the new row.","INSERT INTO SalesLT.Product
     (Name, ProductNumber, StandardCost, ListPrice, ProductCategoryID, SellStartDate)
 VALUES
@@ -45,7 +45,7 @@ SELECT SCOPE_IDENTITY();
 
 SELECT *
 FROM SalesLT.Product
-WHERE ProductID = SCOPE_IDENTITY();",exercises/sql/09_insert_product.sql
+WHERE ProductID = SCOPE_IDENTITY();",exercises/09_insert_product.sql
 10,Inserting an Order Header,"Variables, INSERT",Reusable script that inserts a sales order header from variables and prints the new ID.,"DECLARE @OrderDate datetime = GETDATE();
 DECLARE @DueDate datetime = DATEADD(dd, 7, GETDATE());
 DECLARE @CustomerID int = 1;
@@ -53,7 +53,7 @@ DECLARE @CustomerID int = 1;
 INSERT INTO SalesLT.SalesOrderHeader (OrderDate, DueDate, CustomerID, ShipMethod)
 VALUES (@OrderDate, @DueDate, @CustomerID, 'CARGO TRANSPORT 5');
 
-PRINT SCOPE_IDENTITY();",exercises/sql/10_insert_order_header.sql
+PRINT SCOPE_IDENTITY();",exercises/10_insert_order_header.sql
 11,Logging Errors,"THROW, error handling",Delete an order only if it exists; otherwise throw an error (order ID 0 must fail).,"DECLARE @OrderID int = 0;
 
 -- Custom error message if the specified order doesn't exist
@@ -67,4 +67,4 @@ ELSE
 BEGIN
     DELETE FROM SalesLT.SalesOrderDetail WHERE SalesOrderID = @OrderID;
     DELETE FROM SalesLT.SalesOrderHeader WHERE SalesOrderID = @OrderID;
-END;",exercises/sql/11_delete_order_with_error.sql
+END;",exercises/11_delete_order_with_error.sql
